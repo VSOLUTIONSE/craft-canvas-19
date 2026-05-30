@@ -1,5 +1,5 @@
 import { U as jsxRuntimeExports, r as reactExports, T as React } from "./server.mjs";
-import { R as ReactDOM } from "./router-tOlMwic0.mjs";
+import { R as ReactDOM } from "./router-5gMpaeog.mjs";
 import "node:async_hooks";
 import "node:stream";
 import "node:stream/web";
