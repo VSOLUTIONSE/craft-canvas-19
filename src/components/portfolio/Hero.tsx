@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { Magnetic } from "./Magnetic";
+import pic from "@/assets/pic.jpg";
 
 const FIRST = "Favour";
 const LAST = "Emmanuel";
@@ -37,11 +38,31 @@ export function Hero() {
           AI Prompt Engineer · LLM Trainer
         </motion.p>
 
-        <h1 className="font-display text-[clamp(3.5rem,12vw,11rem)] font-medium leading-[0.88] tracking-tighter">
-          <Word text={FIRST} mouse={mouse} delay={0.1} />
-          <br />
-          <Word text={LAST} mouse={mouse} delay={0.5} italic />
-        </h1>
+        <div className="flex flex-col items-start gap-10 md:flex-row md:items-center md:gap-16">
+          <div className="flex-1">
+            <h1 className="font-display text-[clamp(3.5rem,12vw,11rem)] font-medium leading-[0.88] tracking-tighter">
+              <Word text={FIRST} mouse={mouse} delay={0.1} />
+              <br />
+              <Word text={LAST} mouse={mouse} delay={0.5} italic />
+            </h1>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="shrink-0 md:-ml-8"
+          >
+            <div className="group relative">
+              <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 opacity-50 blur-xl transition-opacity group-hover:opacity-80" />
+              <img
+                src={pic}
+                alt="Favour Emmanuel"
+                className="relative h-48 w-48 rounded-full border-2 border-primary/30 object-cover ring-1 ring-primary/20 transition-transform duration-500 group-hover:scale-[1.02] md:h-72 md:w-72"
+              />
+            </div>
+          </motion.div>
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}

@@ -41,15 +41,7 @@ export function Nav() {
             </a>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
-          </span>
-          <span className="hidden text-xs uppercase tracking-[0.18em] text-muted-foreground sm:inline">
-            Available for hire
-          </span>
-        </div>
+
       </div>
     </motion.header>
   );

@@ -2,9 +2,9 @@ import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./Reveal";
 
 const insights = [
-  { date: "May 2026", read: "6 min read", title: "Prompts are not features. They're infrastructure.", excerpt: "Why teams that treat prompts like throwaway strings keep rebuilding the same workflows." },
-  { date: "Apr 2026", read: "4 min read", title: "Evaluation is the work. Generation is the demo.", excerpt: "A note from the trenches of LLM evaluation, and what most teams get wrong on day one." },
-  { date: "Mar 2026", read: "8 min read", title: "How to humanise AI output without losing the model.", excerpt: "A short guide to stripping AI fingerprints from long-form writing while keeping the engine intact." },
+  { date: "May 2026", read: "6 min read", title: "Prompts are not features. They're infrastructure.", excerpt: "Why teams that treat prompts like throwaway strings keep rebuilding the same workflows.", href: "https://www.coderio.com/blog/innovation/prompt-engineering-what-it-really-takes-to-build-production-grade-ai-systems/?utm_source=chatgpt.com" },
+  { date: "Apr 2026", read: "4 min read", title: "Evaluation is the work. Generation is the demo.", excerpt: "A note from the trenches of LLM evaluation, and what most teams get wrong on day one.", href: "https://www.coderio.com/blog/innovation/prompt-engineering-what-it-really-takes-to-build-production-grade-ai-systems/?utm_source=chatgpt.com" },
+  { date: "Mar 2026", read: "8 min read", title: "How to humanise AI output without losing the model.", excerpt: "A short guide to stripping AI fingerprints from long-form writing while keeping the engine intact.", href: "https://drive.google.com/file/d/1iLj0JuLLpC892pjV4UjxprCrtaeDkM1H/view?usp=sharing" },
 ];
 
 export function Insights() {
@@ -28,7 +28,7 @@ export function Insights() {
         <div className="grid gap-px bg-border md:grid-cols-3">
           {insights.map((post, i) => (
             <Reveal key={post.title} delay={i * 0.1}>
-              <article className="group h-full bg-background p-8 transition-colors hover:bg-card md:p-10">
+              <a href={post.href} target="_blank" rel="noopener noreferrer" className="group block h-full bg-background p-8 transition-colors hover:bg-card md:p-10">
                 <div className="mb-10 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-muted-foreground">
                   <span>{post.date}</span>
                   <span>{post.read}</span>
@@ -41,7 +41,7 @@ export function Insights() {
                   Read
                   <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </div>
-              </article>
+              </a>
             </Reveal>
           ))}
         </div>

@@ -7,7 +7,11 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { lazy, useEffect, type ReactNode } from "react";
+
+const AgentationComponent = import.meta.env.DEV
+  ? lazy(() => import("agentation").then((m) => ({ default: m.Agentation })))
+  : () => null;
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -77,19 +81,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Favour Emmanuel — AI Prompt Engineer & LLM Trainer" },
+      { name: "description", content: "I turn AI into repeatable systems that save time, improve output quality, and make teams faster." },
+      { property: "og:title", content: "Favour Emmanuel — AI Prompt Engineer & LLM Trainer" },
+      { property: "og:description", content: "Prompt systems, LLM evaluation, AI workflow automation, and team training." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      {
+        rel: "icon",
+        type: "image/jpeg",
+        href: "/favicon.jpg",
       },
     ],
   }),
@@ -107,6 +114,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        {import.meta.env.DEV && typeof document !== "undefined" && <AgentationComponent />}
         <Scripts />
       </body>
     </html>
