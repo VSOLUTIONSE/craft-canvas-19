@@ -13,7 +13,7 @@ const projects = [
 
 export function Work() {
   return (
-    <section id="work" className="relative border-t border-border px-6 py-32 md:px-10 md:py-48">
+    <section id="work" className="relative px-6 pt-44 pb-32 md:px-10 md:pt-64 md:pb-48">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <div className="mb-20 flex items-end justify-between">

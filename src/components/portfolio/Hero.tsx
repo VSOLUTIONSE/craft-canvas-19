@@ -107,7 +107,7 @@ export function Hero() {
         </motion.div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      <div className="absolute -bottom-15 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -115,7 +115,6 @@ export function Hero() {
           className="flex items-center gap-2"
         >
           <ArrowDown className="h-3 w-3 animate-bounce" />
-          Scroll
         </motion.div>
       </div>
 
