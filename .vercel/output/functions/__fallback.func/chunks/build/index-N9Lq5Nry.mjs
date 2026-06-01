@@ -1,5 +1,5 @@
 import { U as jsxRuntimeExports, r as reactExports, T as React } from "./server.mjs";
-import { R as ReactDOM } from "./router-5gMpaeog.mjs";
+import { R as ReactDOM } from "./router-B5cugGVk.mjs";
 import "node:async_hooks";
 import "node:stream";
 import "node:stream/web";
@@ -6363,6 +6363,156 @@ const MotionConfigContext = reactExports.createContext({
   isStatic: false,
   reducedMotion: "never"
 });
+function setRef(ref, value) {
+  if (typeof ref === "function") {
+    return ref(value);
+  } else if (ref !== null && ref !== void 0) {
+    ref.current = value;
+  }
+}
+function composeRefs(...refs) {
+  return (node) => {
+    let hasCleanup = false;
+    const cleanups = refs.map((ref) => {
+      const cleanup = setRef(ref, node);
+      if (!hasCleanup && typeof cleanup === "function") {
+        hasCleanup = true;
+      }
+      return cleanup;
+    });
+    if (hasCleanup) {
+      return () => {
+        for (let i = 0; i < cleanups.length; i++) {
+          const cleanup = cleanups[i];
+          if (typeof cleanup === "function") {
+            cleanup();
+          } else {
+            setRef(refs[i], null);
+          }
+        }
+      };
+    }
+  };
+}
+function useComposedRefs(...refs) {
+  return reactExports.useCallback(composeRefs(...refs), refs);
+}
+class PopChildMeasure extends reactExports.Component {
+  getSnapshotBeforeUpdate(prevProps) {
+    const element = this.props.childRef.current;
+    if (isHTMLElement(element) && prevProps.isPresent && !this.props.isPresent && this.props.pop !== false) {
+      const parent = element.offsetParent;
+      const parentWidth = isHTMLElement(parent) ? parent.offsetWidth || 0 : 0;
+      const parentHeight = isHTMLElement(parent) ? parent.offsetHeight || 0 : 0;
+      const computedStyle = getComputedStyle(element);
+      const size = this.props.sizeRef.current;
+      size.height = parseFloat(computedStyle.height);
+      size.width = parseFloat(computedStyle.width);
+      size.top = element.offsetTop;
+      size.left = element.offsetLeft;
+      size.right = parentWidth - size.width - size.left;
+      size.bottom = parentHeight - size.height - size.top;
+      size.direction = computedStyle.direction;
+    }
+    return null;
+  }
+  /**
+   * Required with getSnapshotBeforeUpdate to stop React complaining.
+   */
+  componentDidUpdate() {
+  }
+  render() {
+    return this.props.children;
+  }
+}
+function PopChild({ children, isPresent, anchorX, anchorY, root, pop }) {
+  const id2 = reactExports.useId();
+  const ref = reactExports.useRef(null);
+  const size = reactExports.useRef({
+    width: 0,
+    height: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    direction: "ltr"
+  });
+  const { nonce } = reactExports.useContext(MotionConfigContext);
+  const childRef = children.props?.ref ?? children?.ref;
+  const composedRef = useComposedRefs(ref, childRef);
+  reactExports.useInsertionEffect(() => {
+    const { width, height, top, left, right, bottom, direction } = size.current;
+    if (isPresent || pop === false || !ref.current || !width || !height)
+      return;
+    const isRTL = direction === "rtl";
+    const x = anchorX === "left" ? isRTL ? `right: ${right}` : `left: ${left}` : isRTL ? `left: ${left}` : `right: ${right}`;
+    const y = anchorY === "bottom" ? `bottom: ${bottom}` : `top: ${top}`;
+    ref.current.dataset.motionPopId = id2;
+    const style = document.createElement("style");
+    if (nonce)
+      style.nonce = nonce;
+    const parent = root ?? document.head;
+    parent.appendChild(style);
+    if (style.sheet) {
+      style.sheet.insertRule(`
+          [data-motion-pop-id="${id2}"] {
+            position: absolute !important;
+            width: ${width}px !important;
+            height: ${height}px !important;
+            ${x}px !important;
+            ${y}px !important;
+          }
+        `);
+    }
+    return () => {
+      ref.current?.removeAttribute("data-motion-pop-id");
+      if (parent.contains(style)) {
+        parent.removeChild(style);
+      }
+    };
+  }, [isPresent]);
+  return jsxRuntimeExports.jsx(PopChildMeasure, { isPresent, childRef: ref, sizeRef: size, pop, children: pop === false ? children : reactExports.cloneElement(children, { ref: composedRef }) });
+}
+const PresenceChild = ({ children, initial, isPresent, onExitComplete, custom, presenceAffectsLayout, mode, anchorX, anchorY, root }) => {
+  const presenceChildren = useConstant(newChildrenMap);
+  const id2 = reactExports.useId();
+  let isReusedContext = true;
+  let context = reactExports.useMemo(() => {
+    isReusedContext = false;
+    return {
+      id: id2,
+      initial,
+      isPresent,
+      custom,
+      onExitComplete: (childId) => {
+        presenceChildren.set(childId, true);
+        for (const isComplete of presenceChildren.values()) {
+          if (!isComplete)
+            return;
+        }
+        onExitComplete && onExitComplete();
+      },
+      register: (childId) => {
+        presenceChildren.set(childId, false);
+        return () => presenceChildren.delete(childId);
+      }
+    };
+  }, [isPresent, presenceChildren, onExitComplete]);
+  if (presenceAffectsLayout && isReusedContext) {
+    context = { ...context };
+  }
+  reactExports.useMemo(() => {
+    presenceChildren.forEach((_, key) => presenceChildren.set(key, false));
+  }, [isPresent]);
+  reactExports.useEffect(() => {
+    !isPresent && !presenceChildren.size && onExitComplete && onExitComplete();
+  }, [isPresent]);
+  children = jsxRuntimeExports.jsx(PopChild, { pop: mode === "popLayout", isPresent, anchorX, anchorY, root, children });
+  return jsxRuntimeExports.jsx(PresenceContext.Provider, { value: context, children });
+};
+function newChildrenMap() {
+  return /* @__PURE__ */ new Map();
+}
 function usePresence(subscribe = true) {
   const context = reactExports.useContext(PresenceContext);
   if (context === null)
@@ -6377,6 +6527,87 @@ function usePresence(subscribe = true) {
   const safeToRemove = reactExports.useCallback(() => subscribe && onExitComplete && onExitComplete(id2), [id2, onExitComplete, subscribe]);
   return !isPresent && onExitComplete ? [false, safeToRemove] : [true];
 }
+const getChildKey = (child) => child.key || "";
+function onlyElements(children) {
+  const filtered = [];
+  reactExports.Children.forEach(children, (child) => {
+    if (reactExports.isValidElement(child))
+      filtered.push(child);
+  });
+  return filtered;
+}
+const AnimatePresence = ({ children, custom, initial = true, onExitComplete, presenceAffectsLayout = true, mode = "sync", propagate = false, anchorX = "left", anchorY = "top", root }) => {
+  const [isParentPresent, safeToRemove] = usePresence(propagate);
+  const presentChildren = reactExports.useMemo(() => onlyElements(children), [children]);
+  const presentKeys = propagate && !isParentPresent ? [] : presentChildren.map(getChildKey);
+  const isInitialRender = reactExports.useRef(true);
+  const pendingPresentChildren = reactExports.useRef(presentChildren);
+  const exitComplete = useConstant(() => /* @__PURE__ */ new Map());
+  const exitingComponents = reactExports.useRef(/* @__PURE__ */ new Set());
+  const [diffedChildren, setDiffedChildren] = reactExports.useState(presentChildren);
+  const [renderedChildren, setRenderedChildren] = reactExports.useState(presentChildren);
+  useIsomorphicLayoutEffect(() => {
+    isInitialRender.current = false;
+    pendingPresentChildren.current = presentChildren;
+    for (let i = 0; i < renderedChildren.length; i++) {
+      const key = getChildKey(renderedChildren[i]);
+      if (!presentKeys.includes(key)) {
+        if (exitComplete.get(key) !== true) {
+          exitComplete.set(key, false);
+        }
+      } else {
+        exitComplete.delete(key);
+        exitingComponents.current.delete(key);
+      }
+    }
+  }, [renderedChildren, presentKeys.length, presentKeys.join("-")]);
+  const exitingChildren = [];
+  if (presentChildren !== diffedChildren) {
+    let nextChildren = [...presentChildren];
+    for (let i = 0; i < renderedChildren.length; i++) {
+      const child = renderedChildren[i];
+      const key = getChildKey(child);
+      if (!presentKeys.includes(key)) {
+        nextChildren.splice(i, 0, child);
+        exitingChildren.push(child);
+      }
+    }
+    if (mode === "wait" && exitingChildren.length) {
+      nextChildren = exitingChildren;
+    }
+    setRenderedChildren(onlyElements(nextChildren));
+    setDiffedChildren(presentChildren);
+    return null;
+  }
+  const { forceRender } = reactExports.useContext(LayoutGroupContext);
+  return jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: renderedChildren.map((child) => {
+    const key = getChildKey(child);
+    const isPresent = propagate && !isParentPresent ? false : presentChildren === renderedChildren || presentKeys.includes(key);
+    const onExit = () => {
+      if (exitingComponents.current.has(key)) {
+        return;
+      }
+      if (exitComplete.has(key)) {
+        exitingComponents.current.add(key);
+        exitComplete.set(key, true);
+      } else {
+        return;
+      }
+      let isEveryExitComplete = true;
+      exitComplete.forEach((isExitComplete) => {
+        if (!isExitComplete)
+          isEveryExitComplete = false;
+      });
+      if (isEveryExitComplete) {
+        forceRender?.();
+        setRenderedChildren(pendingPresentChildren.current);
+        propagate && safeToRemove?.();
+        onExitComplete && onExitComplete();
+      }
+    };
+    return jsxRuntimeExports.jsx(PresenceChild, { isPresent, initial: !isInitialRender.current || initial ? void 0 : false, custom, presenceAffectsLayout, mode, root, onExitComplete: isPresent ? void 0 : onExit, anchorX, anchorY, children: child }, key);
+  }) });
+};
 reactExports.createContext({ strict: false });
 const featureProps = {
   animation: [
@@ -8207,16 +8438,21 @@ const createLucideIcon = (iconName, iconNode) => {
   Component.displayName = toPascalCase(iconName);
   return Component;
 };
-const __iconNode$2 = [
+const __iconNode$3 = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$2);
-const __iconNode$1 = [
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$3);
+const __iconNode$2 = [
   ["path", { d: "M7 7h10v10", key: "1tivn9" }],
   ["path", { d: "M7 17 17 7", key: "1vkiza" }]
 ];
-const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$1);
+const ArrowUpRight = createLucideIcon("arrow-up-right", __iconNode$2);
+const __iconNode$1 = [
+  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
+  ["path", { d: "M12 19V5", key: "x0mq9r" }]
+];
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$1);
 const __iconNode = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
 const LoaderCircle = createLucideIcon("loader-circle", __iconNode);
 function Magnetic({ children, className, strength = 0.35 }) {
@@ -8254,6 +8490,7 @@ const LAST = "Emmanuel";
 function Hero() {
   const ref = reactExports.useRef(null);
   const [mouse, setMouse] = reactExports.useState({ x: 0, y: 0 });
+  const [showTop, setShowTop] = reactExports.useState(false);
   reactExports.useEffect(() => {
     const onMove = (e) => {
       const el = ref.current;
@@ -8267,7 +8504,12 @@ function Hero() {
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "top", ref, className: "relative flex min-h-screen flex-col justify-between px-6 pb-12 pt-32 md:px-10 md:pt-40", children: [
+  reactExports.useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > window.innerHeight);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "top", ref, className: "relative flex min-h-screen flex-col px-6 pt-32 md:px-10 md:pt-40", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         motion.p,
@@ -8350,31 +8592,31 @@ function Hero() {
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto flex w-full max-w-7xl items-end justify-between text-xs uppercase tracking-[0.2em] text-muted-foreground", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        motion.div,
-        {
-          initial: { opacity: 0 },
-          animate: { opacity: 1 },
-          transition: { duration: 1, delay: 1.6 },
-          className: "flex items-center gap-2",
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowDown, { className: "h-3 w-3 animate-bounce" }),
-            "Scroll"
-          ]
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        motion.p,
-        {
-          initial: { opacity: 0 },
-          animate: { opacity: 1 },
-          transition: { duration: 1, delay: 1.6 },
-          className: "hidden md:block",
-          children: "Perplexity · Claude · Gemini"
-        }
-      )
-    ] })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      motion.div,
+      {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 1, delay: 1.6 },
+        className: "flex items-center gap-2",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowDown, { className: "h-3 w-3 animate-bounce" }),
+          "Scroll"
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: showTop && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      motion.button,
+      {
+        initial: { opacity: 0, scale: 0.5 },
+        animate: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 0.5 },
+        transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+        onClick: () => window.scrollTo({ top: 0, behavior: "smooth" }),
+        className: "fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background/70 text-foreground shadow-lg backdrop-blur-xl transition-colors hover:border-primary hover:text-primary",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUp, { className: "h-4 w-4" })
+      }
+    ) })
   ] });
 }
 function Word({ text, mouse, delay: delay2, italic }) {
@@ -8697,7 +8939,7 @@ function Footer() {
           /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "a",
             {
-              href: "https://www.linkedin.com/",
+              href: "https://www.linkedin.com/in/favour-em/",
               target: "_blank",
               rel: "noreferrer",
               className: "group inline-flex items-center gap-2 hover:text-primary",
@@ -8734,7 +8976,7 @@ function Footer() {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Colophon" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground", children: "Set in Space Grotesk & Inter Tight. Built with care in 2026." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground", children: "AI Prompt Engineer & Workflow Specialist." })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-16 flex flex-col items-start justify-between gap-3 text-xs uppercase tracking-[0.18em] text-muted-foreground md:flex-row md:items-center", children: [
