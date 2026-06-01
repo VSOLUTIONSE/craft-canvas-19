@@ -2,7 +2,17 @@ import { Reveal } from "./Reveal";
 
 const services = [
   { num: "01", title: "Prompt Systems", desc: "Custom prompt libraries and chains that turn one-off AI experiments into reliable, reusable workflows." },
-  { num: "02", title: "LLM Evaluation", desc: "Structured evals, annotation pipelines, and human-feedback review for teams shipping AI features." },
+  {
+    num: "02",
+    title: "LLM Training & Evaluation",
+    desc: "",
+    skills: [
+      "Data annotation: bounding boxes, polygon segmentation, sentiment tagging, NER, transcription",
+      "RLHF & fine-tuning: ranking model outputs, flagging failure modes, improving response quality",
+      "Annotation tooling: Labelbox, Scale AI, CVAT — not just using them, but understanding how pipelines are structured",
+      "QA",
+    ],
+  },
   { num: "03", title: "AI Workflow Automation", desc: "End-to-end automation that connects models, tools, and APIs into systems your team can operate." },
   { num: "04", title: "Team Training", desc: "Hands-on programs teaching practical AI adoption — from prompting fundamentals to agentic workflows." },
 ];
@@ -38,7 +48,19 @@ export function Services() {
                   <span className="h-px w-12 bg-border transition-all duration-500 group-hover:w-24 group-hover:bg-primary" />
                 </div>
                 <h3 className="font-display text-3xl tracking-tight md:text-4xl">{s.title}</h3>
-                <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">{s.desc}</p>
+                {s.desc && (
+                  <p className="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">{s.desc}</p>
+                )}
+                {s.skills && (
+                  <ul className="mt-6 space-y-3">
+                    {s.skills.map((skill) => (
+                      <li key={skill} className="flex items-start gap-3 text-sm leading-relaxed text-muted-foreground">
+                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" />
+                        {skill}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </Reveal>
           ))}
