@@ -1,5 +1,5 @@
 import { U as jsxRuntimeExports, r as reactExports, T as React } from "./server.mjs";
-import { R as ReactDOM } from "./router-B5cugGVk.mjs";
+import { R as ReactDOM } from "./router-D66Nnk17.mjs";
 import "node:async_hooks";
 import "node:stream";
 import "node:stream/web";
@@ -8592,17 +8592,14 @@ function Hero() {
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute -bottom-15 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       motion.div,
       {
         initial: { opacity: 0 },
         animate: { opacity: 1 },
         transition: { duration: 1, delay: 1.6 },
         className: "flex items-center gap-2",
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowDown, { className: "h-3 w-3 animate-bounce" }),
-          "Scroll"
-        ]
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowDown, { className: "h-3 w-3 animate-bounce" })
       }
     ) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: showTop && /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -8706,7 +8703,7 @@ const projects = [
   { num: "06", title: "Team AI Adoption Program", category: "Training", year: "2025", desc: "Hands-on training program teaching teams to build repeatable AI workflows.", tag: "Training" }
 ];
 function Work() {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("section", { id: "work", className: "relative border-t border-border px-6 py-32 md:px-10 md:py-48", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto max-w-7xl", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("section", { id: "work", className: "relative px-6 pt-44 pb-32 md:px-10 md:pt-64 md:pb-48", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto max-w-7xl", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Reveal, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-20 flex items-end justify-between", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mb-6 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-muted-foreground", children: [
