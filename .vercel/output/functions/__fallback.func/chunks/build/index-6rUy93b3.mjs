@@ -1,5 +1,5 @@
 import { U as jsxRuntimeExports, r as reactExports, T as React } from "./server.mjs";
-import { R as ReactDOM } from "./router-D66Nnk17.mjs";
+import { R as ReactDOM } from "./router-CskUj3NU.mjs";
 import "node:async_hooks";
 import "node:stream";
 import "node:stream/web";
@@ -8756,7 +8756,17 @@ function ProjectRow({ project, index }) {
 }
 const services = [
   { num: "01", title: "Prompt Systems", desc: "Custom prompt libraries and chains that turn one-off AI experiments into reliable, reusable workflows." },
-  { num: "02", title: "LLM Evaluation", desc: "Structured evals, annotation pipelines, and human-feedback review for teams shipping AI features." },
+  {
+    num: "02",
+    title: "LLM Training & Evaluation",
+    desc: "",
+    skills: [
+      "Data annotation: bounding boxes, polygon segmentation, sentiment tagging, NER, transcription",
+      "RLHF & fine-tuning: ranking model outputs, flagging failure modes, improving response quality",
+      "Annotation tooling: Labelbox, Scale AI, CVAT — not just using them, but understanding how pipelines are structured",
+      "QA"
+    ]
+  },
   { num: "03", title: "AI Workflow Automation", desc: "End-to-end automation that connects models, tools, and APIs into systems your team can operate." },
   { num: "04", title: "Team Training", desc: "Hands-on programs teaching practical AI adoption — from prompting fundamentals to agentic workflows." }
 ];
@@ -8781,7 +8791,11 @@ function Services() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-px w-12 bg-border transition-all duration-500 group-hover:w-24 group-hover:bg-primary" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-3xl tracking-tight md:text-4xl", children: s.title }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-6 max-w-md text-base leading-relaxed text-muted-foreground", children: s.desc })
+      s.desc && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-6 max-w-md text-base leading-relaxed text-muted-foreground", children: s.desc }),
+      s.skills && /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mt-6 space-y-3", children: s.skills.map((skill) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: "flex items-start gap-3 text-sm leading-relaxed text-muted-foreground", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mt-2 h-1 w-1 shrink-0 rounded-full bg-primary" }),
+        skill
+      ] }, skill)) })
     ] }) }, s.num)) })
   ] }) });
 }
