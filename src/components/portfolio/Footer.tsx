@@ -17,7 +17,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2 text-base">
               <li>
                 <a
-                  href="https://www.linkedin.com/"
+                  href="https://www.linkedin.com/in/favour-em/"
                   target="_blank"
                   rel="noreferrer"
                   className="group inline-flex items-center gap-2 hover:text-primary"
@@ -52,7 +52,7 @@ export function Footer() {
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Colophon</p>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Set in Space Grotesk &amp; Inter Tight. Built with care in 2026.
+              AI Prompt Engineer &amp; Workflow Specialist.
             </p>
           </div>
         </div>

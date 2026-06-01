@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowDown, ArrowUpRight, ArrowUp } from "lucide-react";
 import { Magnetic } from "./Magnetic";
 import pic from "@/assets/pic.jpg";
 
@@ -10,6 +10,7 @@ const LAST = "Emmanuel";
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -25,8 +26,14 @@ export function Hero() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > window.innerHeight);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section id="top" ref={ref} className="relative flex min-h-screen flex-col justify-between px-6 pb-12 pt-32 md:px-10 md:pt-40">
+    <section id="top" ref={ref} className="relative flex min-h-screen flex-col px-6 pt-32 md:px-10 md:pt-40">
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
@@ -100,7 +107,7 @@ export function Hero() {
         </motion.div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-7xl items-end justify-between text-xs uppercase tracking-[0.2em] text-muted-foreground">
+      <div className="absolute -bottom-15 left-1/2 -translate-x-1/2 flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -108,17 +115,23 @@ export function Hero() {
           className="flex items-center gap-2"
         >
           <ArrowDown className="h-3 w-3 animate-bounce" />
-          Scroll
         </motion.div>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.6 }}
-          className="hidden md:block"
-        >
-          Perplexity · Claude · Gemini
-        </motion.p>
       </div>
+
+      <AnimatePresence>
+        {showTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background/70 text-foreground shadow-lg backdrop-blur-xl transition-colors hover:border-primary hover:text-primary"
+          >
+            <ArrowUp className="h-4 w-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
