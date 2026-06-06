@@ -4686,7 +4686,7 @@ function RootComponent() {
   const { queryClient } = Route$1.useRouteContext();
   return /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) });
 }
-const $$splitComponentImporter = () => import("./index-6rUy93b3.mjs");
+const $$splitComponentImporter = () => import("./index-CmL89sMq.mjs");
 const Route2 = createFileRoute("/")({
   head: () => ({
     meta: [{

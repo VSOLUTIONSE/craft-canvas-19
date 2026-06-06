@@ -1,5 +1,5 @@
 import { U as jsxRuntimeExports, r as reactExports, T as React } from "./server.mjs";
-import { R as ReactDOM } from "./router-CskUj3NU.mjs";
+import { R as ReactDOM } from "./router-Cj_e2Lcv.mjs";
 import "node:async_hooks";
 import "node:stream";
 import "node:stream/web";
@@ -8520,7 +8520,7 @@ function Hero() {
           className: "mb-8 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-muted-foreground",
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "h-px w-10 bg-primary" }),
-            "AI Prompt Engineer · LLM Trainer"
+            "AI Consultant · Prompt Engineer"
           ]
         }
       ),
@@ -8558,7 +8558,7 @@ function Hero() {
           animate: { opacity: 1, y: 0 },
           transition: { duration: 0.8, delay: 1.1 },
           className: "mt-10 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl",
-          children: "I turn AI into repeatable systems that save time, improve output quality, and make teams faster."
+          children: "I help brands leverage AI to work smarter, scale results, and grow profits."
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
